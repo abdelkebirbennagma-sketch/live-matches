@@ -3,39 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بث مباشر للمباريات - Live Matches</title>
+    <title>KOORA LIVE - بث مباشر للمباريات</title>
     <style>
-        body { font-family: Tahoma, sans-serif; background-color: #121212; color: #fff; margin: 0; padding: 0; text-align: center; }
-        header { background: #1f1f1f; padding: 20px; border-bottom: 2px solid #e50914; }
-        h1 { margin: 0; font-size: 24px; color: #e50914; }
-        .container { max-width: 800px; margin: 30px auto; padding: 15px; }
-        .match-card { background: #1e1e1e; border-radius: 8px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); display: flex; justify-content: space-between; align-items: center; }
-        .match-info { font-size: 18px; font-weight: bold; }
-        .watch-btn { background: #e50914; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; text-decoration: none; font-weight: bold; }
-        .watch-btn:hover { background: #b20710; }
-        footer { margin-top: 50px; padding: 20px; color: #777; font-size: 14px; }
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #3b82f6;
+            --live-color: #ef4444;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-bottom: 2px solid #334155;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        h1 { margin: 0; font-size: 28px; color: #fff; letter-spacing: 1px; }
+        h1 span { color: var(--live-color); }
+        .subtitle { color: var(--text-muted); font-size: 14px; margin-top: 5px; }
+        
+        .container { max-width: 900px; margin: 30px auto; padding: 0 15px; }
+        
+        /* تصميم بطاقة المباراة الاحترافية */
+        .match-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border: 1px solid #334155;
+            transition: transform 0.2s ease;
+        }
+        .match-card:hover { transform: translateY(-3px); }
+        
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--text-muted);
+            border-bottom: 1px solid #334155;
+            padding-bottom: 8px;
+        }
+        .live-badge {
+            background: var(--live-color);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 11px;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .teams-section {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            text-align: center;
+        }
+        .team {
+            width: 40%;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .vs {
+            font-size: 14px;
+            color: var(--text-muted);
+            background: #0f172a;
+            padding: 8px 12px;
+            border-radius: 50%;
+            border: 1px solid #334155;
+        }
+
+        .watch-btn {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            text-align: center;
+            font-size: 15px;
+            box-shadow: 0 4px 10px rgba(239, 68, 68, 0.4);
+            transition: background 0.2s;
+        }
+        .watch-btn:hover { background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%); }
+
+        /* واجهة مشغل البث (مخفية حتى يتم النقر على المباراة) */
+        #player-section {
+            display: none;
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid var(--accent-color);
+        }
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* نسبة 16:9 */
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .video-container iframe, .video-container video {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border: none;
+        }
+        .back-btn {
+            background: #334155;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .back-btn:hover { background: #475569; }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-muted);
+            font-size: 13px;
+            border-top: 1px solid #334155;
+            margin-top: 50px;
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>موقع بث المباريات المباشرة</h1>
-        <p>تابع أهم مباريات اليوم بث مباشر بجودات متعددة</p>
+        <h1>KOORA <span>LIVE</span></h1>
+        <div class="subtitle">منصتك الأولى لمتابعة المباريات الحية بأفضل جودة</div>
     </header>
 
-    <div class="container" id="matches-list">
-        <div class="match-card">
-            <div class="match-info">جاري تحميل مباريات اليوم...</div>
+    <div class="container">
+        <!-- قسم مشغل البث المباشر -->
+        <div id="player-section">
+            <button class="back-btn" onclick="goBackToMatches()">← العودة لقائمة المباريات</button>
+            <h2 id="match-title-display" style="text-align: center; margin-bottom: 15px; font-size: 20px;"></h2>
+            <div class="video-container">
+                <!-- هنا سيتم وضع مشغل البث الحقيقي أو الكود الخارجي -->
+                <iframe id="live-iframe" src="" allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <!-- قائمة المباريات -->
+        <div id="matches-container">
+            <div style="text-align: center; color: var(--text-muted); padding: 40px;">جاري تحديث جدول المباريات...</div>
         </div>
     </div>
 
-    <div id="ads-container" style="margin: 20px auto;">
-        <!-- أكواد إعلاناتك ستوضع هنا مستقبلاً -->
-    </div>
-<script src="script.js"></script>
     <footer>
-        <p>&copy; 2026 جميع الحقوق محفوظة للموقع</p>
+        <p>&copy; 2026 KOORA LIVE. جميع الحقوق محفوظة.</p>
     </footer>
 
+    <script src="script.js"></script>
 </body>
 </html>
