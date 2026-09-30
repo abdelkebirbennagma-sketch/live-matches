@@ -1,131 +1,570 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SaveSnap - Online Video Downloader</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        body {
-            background-color: #0b0f19;
-            color: #f8fafc;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            text-align: center;
-        }
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            background: linear-gradient(to right, #38bdf8, #818cf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        header p {
-            color: #94a3b8;
-            font-size: 1.1rem;
-            margin-bottom: 40px;
-        }
-        .downloader-box {
-            background: #1e293b;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-            border: 1px solid #334155;
-        }
-        .input-group {
-            display: flex;
-            gap: 10px;
-            background: #0f172a;
-            padding: 8px;
-            border-radius: 12px;
-            border: 1px solid #475569;
-        }
-        .input-group input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            outline: none;
-            color: white;
-            padding: 12px 15px;
-            font-size: 1rem;
-        }
-        .input-group button {
-            background: #2563eb;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .input-group button:hover {
-            background: #1d4ed8;
-        }
-        .platforms {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            color: #64748b;
-            font-size: 1.2rem;
-        }
-        #result-area {
-            margin-top: 25px;
-            display: none;
-            text-align: left;
-        }
-        footer {
-            text-align: center;
-            padding: 20px;
-            color: #64748b;
-            font-size: 0.9rem;
-            border-top: 1px solid #1e293b;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SaveSnap - Download videos from TikTok, Instagram, YouTube, and Facebook instantly for free.">
+  <meta name="theme-color" content="#0b0f19">
+  <title>SaveSnap - Free Video Downloader</title>
+
+  <!-- Font Awesome 6 -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    integrity="sha512-c9DAB5WkZJ4z8XUe5h2M8mM9V8S6JYh1ZV7V9C8R8nR7YfV2xZJv3H6e4z8p7q5G1xH2f1G9m5R4v3q6f1Yg=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  >
+
+  <style>
+    /* =========================================================
+       SaveSnap - Scoped & Blogger-Friendly Styles
+       ========================================================= */
+
+    .savesnap-app,
+    .savesnap-app * {
+      box-sizing: border-box;
+    }
+
+    .savesnap-app {
+      --ss-bg: #0b0f19;
+      --ss-surface: #111827;
+      --ss-surface-2: #172033;
+      --ss-border: rgba(148, 163, 184, 0.16);
+      --ss-border-hover: rgba(96, 165, 250, 0.34);
+      --ss-text: #f8fafc;
+      --ss-text-muted: #94a3b8;
+      --ss-primary: #38bdf8;
+      --ss-primary-2: #818cf8;
+      --ss-button-text: #07111f;
+      --ss-shadow: 0 20px 60px rgba(0, 0, 0, 0.32);
+      --ss-radius: 20px;
+
+      width: 100%;
+      min-height: 100%;
+      padding: 32px 18px 24px;
+      margin: 0;
+      color: var(--ss-text);
+      font-family:
+        Inter,
+        ui-sans-serif,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+      background:
+        radial-gradient(circle at 50% -10%, rgba(56, 189, 248, 0.12), transparent 38%),
+        radial-gradient(circle at 85% 15%, rgba(129, 140, 248, 0.08), transparent 28%),
+        var(--ss-bg);
+      border-radius: 24px;
+      overflow: hidden;
+    }
+
+    .savesnap-app a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .savesnap-shell {
+      width: 100%;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .savesnap-header {
+      text-align: center;
+      padding: 24px 12px 30px;
+    }
+
+    .savesnap-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      margin-bottom: 18px;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 999px;
+      color: #bae6fd;
+      background: rgba(56, 189, 248, 0.07);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .savesnap-badge i {
+      font-size: 11px;
+    }
+
+    .savesnap-title {
+      margin: 0;
+      font-size: clamp(2.5rem, 7vw, 4.5rem);
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -0.055em;
+      background: linear-gradient(135deg, #38bdf8 0%, #60a5fa 42%, #818cf8 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .savesnap-tagline {
+      max-width: 690px;
+      margin: 18px auto 0;
+      color: var(--ss-text-muted);
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      line-height: 1.7;
+    }
+
+    /* Main Downloader Card */
+    .savesnap-card {
+      position: relative;
+      padding: clamp(20px, 4vw, 34px);
+      background:
+        linear-gradient(180deg, rgba(23, 32, 51, 0.9), rgba(17, 24, 39, 0.94));
+      border: 1px solid var(--ss-border);
+      border-radius: var(--ss-radius);
+      box-shadow: var(--ss-shadow);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .savesnap-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 10%;
+      right: 10%;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(56, 189, 248, 0.5),
+        rgba(129, 140, 248, 0.5),
+        transparent
+      );
+      pointer-events: none;
+    }
+
+    .savesnap-form {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .savesnap-input-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .savesnap-input-icon {
+      position: absolute;
+      top: 50%;
+      left: 18px;
+      transform: translateY(-50%);
+      color: #64748b;
+      font-size: 16px;
+      pointer-events: none;
+      transition: color 0.2s ease;
+    }
+
+    .savesnap-input {
+      width: 100%;
+      height: 58px;
+      padding: 0 18px 0 48px;
+      color: var(--ss-text);
+      background: rgba(11, 15, 25, 0.78);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 14px;
+      outline: none;
+      font-family: inherit;
+      font-size: 15px;
+      transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+    }
+
+    .savesnap-input::placeholder {
+      color: #64748b;
+    }
+
+    .savesnap-input:hover {
+      border-color: var(--ss-border-hover);
+    }
+
+    .savesnap-input:focus {
+      background: rgba(11, 15, 25, 0.92);
+      border-color: rgba(56, 189, 248, 0.58);
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.08);
+    }
+
+    .savesnap-input:focus + .savesnap-input-focus,
+    .savesnap-input-wrap:focus-within .savesnap-input-icon {
+      color: var(--ss-primary);
+    }
+
+    .savesnap-download-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex: 0 0 auto;
+      min-width: 150px;
+      height: 58px;
+      padding: 0 22px;
+      color: var(--ss-button-text);
+      background: linear-gradient(135deg, var(--ss-primary), var(--ss-primary-2));
+      border: 0;
+      border-radius: 14px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow:
+        0 10px 24px rgba(56, 189, 248, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        filter 0.2s ease;
+    }
+
+    .savesnap-download-btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.05);
+      box-shadow:
+        0 14px 30px rgba(56, 189, 248, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    }
+
+    .savesnap-download-btn:active {
+      transform: translateY(0);
+    }
+
+    .savesnap-download-btn:focus-visible {
+      outline: 3px solid rgba(129, 140, 248, 0.4);
+      outline-offset: 3px;
+    }
+
+    /* Supported Platforms */
+    .savesnap-supported {
+      margin-top: 28px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(148, 163, 184, 0.1);
+    }
+
+    .savesnap-supported-label {
+      margin: 0 0 14px;
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .savesnap-platforms {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .savesnap-platform {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 42px;
+      padding: 0 14px;
+      color: #cbd5e1;
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+    }
+
+    .savesnap-platform:hover {
+      transform: translateY(-1px);
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(148, 163, 184, 0.22);
+    }
+
+    .savesnap-platform i {
+      font-size: 17px;
+    }
+
+    .savesnap-platform.tiktok i {
+      color: #f1f5f9;
+    }
+
+    .savesnap-platform.instagram i {
+      color: #f472b6;
+    }
+
+    .savesnap-platform.youtube i {
+      color: #ef4444;
+    }
+
+    .savesnap-platform.facebook i {
+      color: #60a5fa;
+    }
+
+    /* Hidden Result Area */
+    #result-area {
+      display: none;
+      margin-top: 20px;
+    }
+
+    /* Optional loading state */
+    .savesnap-loading {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 18px;
+      color: #94a3b8;
+      font-size: 14px;
+    }
+
+    .savesnap-spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(148, 163, 184, 0.2);
+      border-top-color: var(--ss-primary);
+      border-radius: 50%;
+      animation: savesnap-spin 0.75s linear infinite;
+    }
+
+    @keyframes savesnap-spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Footer */
+    .savesnap-footer {
+      padding: 28px 12px 8px;
+      text-align: center;
+    }
+
+    .savesnap-footer p {
+      margin: 0;
+      color: #64748b;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .savesnap-footer-brand {
+      color: #94a3b8;
+      font-weight: 700;
+    }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+      .savesnap-app {
+        padding: 20px 12px 18px;
+        border-radius: 18px;
+      }
+
+      .savesnap-header {
+        padding: 22px 8px 24px;
+      }
+
+      .savesnap-title {
+        font-size: clamp(2.45rem, 14vw, 3.7rem);
+      }
+
+      .savesnap-tagline {
+        font-size: 14px;
+        line-height: 1.65;
+        margin-top: 15px;
+      }
+
+      .savesnap-card {
+        padding: 16px;
+        border-radius: 18px;
+      }
+
+      .savesnap-form {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .savesnap-input {
+        height: 56px;
+        font-size: 14px;
+      }
+
+      .savesnap-download-btn {
+        width: 100%;
+        height: 56px;
+      }
+
+      .savesnap-platforms {
+        gap: 8px;
+      }
+
+      .savesnap-platform {
+        flex: 1 1 calc(50% - 8px);
+        justify-content: center;
+        min-width: 0;
+      }
+    }
+
+    @media (max-width: 390px) {
+      .savesnap-platform {
+        flex-basis: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .savesnap-app *,
+      .savesnap-app *::before,
+      .savesnap-app *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
 </head>
+
 <body>
+  <div class="savesnap-app">
+    <div class="savesnap-shell">
 
-    <div class="container">
-        <header>
-            <h1>SaveSnap 🚀</h1>
-            <p>Download videos from TikTok, Instagram, YouTube, and Facebook instantly for free.</p>
-        </header>
-
-        <div class="downloader-box">
-            <div class="input-group">
-                <input type="text" id="video-url" placeholder="Paste video link here...">
-                <button onclick="handleDownload()">Download</button>
-            </div>
-
-            <div class="platforms">
-                <span><i class="fa-brands fa-tiktok"></i> TikTok</span>
-                <span><i class="fa-brands fa-instagram"></i> Instagram</span>
-                <span><i class="fa-brands fa-youtube"></i> YouTube</span>
-                <span><i class="fa-brands fa-facebook"></i> Facebook</span>
-            </div>
-
-            <div id="result-area"></div>
+      <!-- Header -->
+      <header class="savesnap-header">
+        <div class="savesnap-badge">
+          <i class="fa-solid fa-bolt"></i>
+          Fast &amp; Free
         </div>
+
+        <h1 class="savesnap-title">SaveSnap 🚀</h1>
+
+        <p class="savesnap-tagline">
+          Download videos from TikTok, Instagram, YouTube, and Facebook instantly for free.
+        </p>
+      </header>
+
+      <!-- Main Downloader -->
+      <main>
+        <section class="savesnap-card" aria-label="Video downloader">
+
+          <form class="savesnap-form" id="download-form" autocomplete="off">
+            <div class="savesnap-input-wrap">
+              <i class="fa-solid fa-link savesnap-input-icon" aria-hidden="true"></i>
+
+              <input
+                class="savesnap-input"
+                id="video-url"
+                name="video-url"
+                type="url"
+                inputmode="url"
+                placeholder="Paste your video link here..."
+                aria-label="Video URL"
+                aria-describedby="supported-platforms-label"
+                autocomplete="off"
+                spellcheck="false"
+                required
+              >
+            </div>
+
+            <button
+              class="savesnap-download-btn"
+              id="download-btn"
+              type="submit"
+              aria-label="Download video"
+            >
+              <i class="fa-solid fa-download" aria-hidden="true"></i>
+              <span>Download</span>
+            </button>
+          </form>
+
+          <!-- Optional loading indicator -->
+          <div class="savesnap-loading" id="loading-state" aria-live="polite">
+            <span class="savesnap-spinner" aria-hidden="true"></span>
+            <span>Processing your link...</span>
+          </div>
+
+          <!-- Dynamic Result Area -->
+          <div
+            id="result-area"
+            aria-live="polite"
+            aria-atomic="true"
+          ></div>
+
+          <!-- Supported Platforms -->
+          <div class="savesnap-supported">
+            <p
+              class="savesnap-supported-label"
+              id="supported-platforms-label"
+            >
+              Supported platforms
+            </p>
+
+            <div class="savesnap-platforms">
+              <div class="savesnap-platform tiktok" title="TikTok">
+                <i class="fa-brands fa-tiktok" aria-hidden="true"></i>
+                <span>TikTok</span>
+              </div>
+
+              <div class="savesnap-platform instagram" title="Instagram">
+                <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+                <span>Instagram</span>
+              </div>
+
+              <div class="savesnap-platform youtube" title="YouTube">
+                <i class="fa-brands fa-youtube" aria-hidden="true"></i>
+                <span>YouTube</span>
+              </div>
+
+              <div class="savesnap-platform facebook" title="Facebook">
+                <i class="fa-brands fa-facebook" aria-hidden="true"></i>
+                <span>Facebook</span>
+              </div>
+            </div>
+          </div>
+
+        </section>
+      </main>
+
+      <!-- Footer -->
+      <footer class="savesnap-footer">
+        <p>
+          © <span id="current-year">2026</span>
+          <span class="savesnap-footer-brand">SaveSnap</span>.
+          All rights reserved.
+        </p>
+      </footer>
+
     </div>
+  </div>
 
-    <footer>
-        <p>&copy; 2026 SaveSnap. All rights reserved.</p>
-    </footer>
+  <!-- External JavaScript -->
+  <script src="script.js"></script>
 
-    <script src="script.js"></script>
+  <!-- Minimal page-only utility -->
+  <script>
+    (function () {
+      var yearElement = document.getElementById("current-year");
+
+      if (yearElement) {
+        yearElement.textContent = new Date().getFullYear();
+      }
+    })();
+  </script>
 </body>
 </html>
