@@ -1,178 +1,351 @@
+```javascript
 /**
- * SaveSnap - Static Video Downloader
- * Front-end only / GitHub Pages compatible
+ * SaveSnap - Video Downloader Front-End Script
+ * Static-site compatible: GitHub Pages / Blogger / any static hosting.
  *
- * Requires these elements in your HTML:
- *   #video-url
- *   #result-area
+ * Important:
+ * A static website cannot directly fetch and download videos from
+ * platforms such as YouTube, TikTok, Instagram, or Facebook because
+ * those platforms generally require server-side processing/API access.
+ *
+ * This script safely validates the URL, presents the submitted link,
+ * provides a direct link to the original page, and offers Cobalt as
+ * an external downloader alternative.
  */
 
-(() => {
-  "use strict";
+"use strict";
 
-  /**
-   * Escape HTML-sensitive characters.
-   * This protects user-provided URLs before inserting them into HTML.
-   *
-   * @param {string} value
-   * @returns {string}
-   */
-  function escapeHTML(value) {
-    const div = document.createElement("div");
-    div.textContent = value;
-    return div.innerHTML;
+/* =========================================================
+   Configuration
+   ========================================================= */
+
+const SAVESNAP_CONFIG = {
+  inputId: "video-url",
+  resultId: "result-area",
+  formId: "download-form",
+  cobaltUrl: "https://cobalt.tools/"
+};
+
+/* =========================================================
+   DOM Helpers
+   ========================================================= */
+
+/**
+ * Get an element by ID safely.
+ * @param {string} id
+ * @returns {HTMLElement|null}
+ */
+function getElement(id) {
+  return document.getElementById(id);
+}
+
+/**
+ * Escape HTML-sensitive characters.
+ * This prevents user-provided URLs from being interpreted as HTML.
+ *
+ * @param {string} value
+ * @returns {string}
+ */
+function escapeHtml(value) {
+  const temp = document.createElement("div");
+  temp.textContent = value;
+  return temp.innerHTML;
+}
+
+/* =========================================================
+   URL Validation
+   ========================================================= */
+
+/**
+ * Validate that the supplied value is a real HTTP/HTTPS URL.
+ *
+ * @param {string} value
+ * @returns {boolean}
+ */
+function isValidVideoUrl(value) {
+  try {
+    const url = new URL(value);
+
+    return (
+      url.protocol === "https:" ||
+      url.protocol === "http:"
+    );
+  } catch (error) {
+    return false;
+  }
+}
+
+/* =========================================================
+   Result UI
+   ========================================================= */
+
+/**
+ * Inject the result interface into #result-area.
+ *
+ * @param {string} videoUrl
+ */
+function showResult(videoUrl) {
+  const resultArea = getElement(SAVESNAP_CONFIG.resultId);
+
+  if (!resultArea) {
+    console.error("SaveSnap: #result-area was not found.");
+    return;
   }
 
-  /**
-   * Build the result interface.
-   *
-   * @param {string} videoUrl
-   */
-  function renderResult(videoUrl) {
-    const resultArea = document.getElementById("result-area");
+  const safeUrl = escapeHtml(videoUrl);
 
-    if (!resultArea) {
-      console.error('SaveSnap: Element with id="result-area" was not found.');
-      return;
-    }
-
-    const safeUrl = escapeHTML(videoUrl);
-
-    resultArea.innerHTML = `
-      <div class="savesnap-result">
-        <div class="savesnap-success">
-          <div class="savesnap-success-icon">✓</div>
-          <div>
-            <strong>✅ Video Processed Successfully!</strong>
-            <p>Your video link is ready to use.</p>
-          </div>
+  resultArea.innerHTML = `
+    <div class="savesnap-result-card" style="
+      margin-top: 22px;
+      padding: 22px;
+      background: rgba(11, 15, 25, 0.78);
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+    ">
+      <div style="
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 18px;
+      ">
+        <div style="
+          width: 38px;
+          height: 38px;
+          flex: 0 0 38px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          background: rgba(34, 197, 94, 0.12);
+          color: #4ade80;
+          font-size: 16px;
+        ">
+          <i class="fa-solid fa-check" aria-hidden="true"></i>
         </div>
 
-        <div class="savesnap-url-box">
-          <span class="savesnap-label">Video Link</span>
-          <div class="savesnap-url" title="${safeUrl}">
-            ${safeUrl}
-          </div>
-        </div>
+        <div style="min-width: 0;">
+          <h3 style="
+            margin: 0 0 6px;
+            color: #f8fafc;
+            font-size: 17px;
+            line-height: 1.4;
+          ">
+            ✅ Video Processed Successfully!
+          </h3>
 
-        <div class="savesnap-actions">
-          <a
-            class="savesnap-action savesnap-direct"
-            href="${safeUrl}"
-            download
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Open or download video directly"
-          >
-            <span>⬇</span>
-            <span>
-              <strong>Direct Download</strong>
-              <small>Open the video link directly</small>
-            </span>
-          </a>
-
-          <a
-            class="savesnap-action savesnap-alternative"
-            href="https://cobalt.tools/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Use an alternative video downloader"
-          >
-            <span>⚡</span>
-            <span>
-              <strong>Alternative Downloader</strong>
-              <small>Try a public downloader if needed</small>
-            </span>
-          </a>
-        </div>
-
-        <div class="savesnap-note">
-          <span>ℹ️</span>
-          <span>
-            The direct option depends on the source website allowing direct
-            access or downloads. The alternative downloader opens in a new tab.
-          </span>
+          <p style="
+            margin: 0;
+            color: #94a3b8;
+            font-size: 13px;
+            line-height: 1.6;
+          ">
+            Your video link is ready. Choose one of the options below.
+          </p>
         </div>
       </div>
-    `;
 
-    resultArea.style.display = "block";
+      <div style="
+        margin-bottom: 18px;
+        padding: 12px 14px;
+        background: rgba(255, 255, 255, 0.035);
+        border: 1px solid rgba(148, 163, 184, 0.1);
+        border-radius: 10px;
+      ">
+        <div style="
+          margin-bottom: 6px;
+          color: #64748b;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+        ">
+          Video Link
+        </div>
 
-    // Smoothly bring the result into view.
+        <div style="
+          overflow-wrap: anywhere;
+          word-break: break-word;
+          color: #cbd5e1;
+          font-size: 13px;
+          line-height: 1.55;
+        ">
+          ${safeUrl}
+        </div>
+      </div>
+
+      <div style="
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      ">
+        <!-- Direct/original link -->
+        <a
+          href="${safeUrl}"
+          target="_blank"
+          rel="noopener noreferrer"
+          style="
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            min-height: 48px;
+            padding: 12px 16px;
+            color: #052e16;
+            background: linear-gradient(135deg, #4ade80, #22c55e);
+            border-radius: 11px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 800;
+            text-align: center;
+            text-decoration: none;
+            transition: transform 0.2s ease, filter 0.2s ease;
+          "
+          onmouseover="this.style.transform='translateY(-1px)';this.style.filter='brightness(1.05)'"
+          onmouseout="this.style.transform='translateY(0)';this.style.filter='brightness(1)'"
+        >
+          <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+          Open Video Link
+        </a>
+
+        <!-- Alternative downloader -->
+        <a
+          href="${SAVESNAP_CONFIG.cobaltUrl}"
+          target="_blank"
+          rel="noopener noreferrer"
+          style="
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            min-height: 48px;
+            padding: 12px 16px;
+            color: #451a03;
+            background: linear-gradient(135deg, #facc15, #f59e0b);
+            border-radius: 11px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 800;
+            text-align: center;
+            text-decoration: none;
+            transition: transform 0.2s ease, filter 0.2s ease;
+          "
+          onmouseover="this.style.transform='translateY(-1px)';this.style.filter='brightness(1.05)'"
+          onmouseout="this.style.transform='translateY(0)';this.style.filter='brightness(1)'"
+        >
+          <i class="fa-solid fa-cloud-arrow-down" aria-hidden="true"></i>
+          Try Alternative Downloader
+        </a>
+      </div>
+
+      <p style="
+        margin: 14px 0 0;
+        color: #64748b;
+        font-size: 11px;
+        line-height: 1.6;
+        text-align: center;
+      ">
+        The alternative downloader opens in a separate tab.
+        Make sure you have permission to download and use the content.
+      </p>
+    </div>
+  `;
+
+  resultArea.style.display = "block";
+
+  // Smoothly bring the generated result into view.
+  window.requestAnimationFrame(() => {
     resultArea.scrollIntoView({
       behavior: "smooth",
       block: "nearest"
     });
-  }
-
-  /**
-   * Handle the main download/process action.
-   *
-   * Retrieves #video-url, validates it, and displays the result.
-   */
-  function handleDownload() {
-    const input = document.getElementById("video-url");
-    const resultArea = document.getElementById("result-area");
-
-    if (!input) {
-      console.error('SaveSnap: Element with id="video-url" was not found.');
-      return;
-    }
-
-    if (!resultArea) {
-      console.error('SaveSnap: Element with id="result-area" was not found.');
-      return;
-    }
-
-    const videoUrl = input.value.trim();
-
-    // Hide any previous result while validating the new request.
-    resultArea.style.display = "none";
-
-    // Validate empty input.
-    if (!videoUrl) {
-      alert("Please paste a valid video link first.");
-      input.focus();
-      return;
-    }
-
-    // Basic URL validation.
-    let parsedUrl;
-
-    try {
-      parsedUrl = new URL(videoUrl);
-    } catch {
-      alert("Please paste a valid link first.");
-      input.focus();
-      return;
-    }
-
-    // Only allow standard web URLs.
-    if (!["http:", "https:"].includes(parsedUrl.protocol)) {
-      alert("Please paste a valid HTTP or HTTPS video link.");
-      input.focus();
-      return;
-    }
-
-    // Use the normalized URL for the generated links.
-    renderResult(parsedUrl.href);
-  }
-
-  /**
-   * Make handleDownload() globally available so it can be used by:
-   * <button onclick="handleDownload()">Download</button>
-   */
-  window.handleDownload = handleDownload;
-
-  /**
-   * Optional automatic setup for a button with id="download-btn".
-   * This works without requiring inline onclick attributes.
-   */
-  document.addEventListener("DOMContentLoaded", () => {
-    const downloadButton = document.getElementById("download-btn");
-
-    if (downloadButton) {
-      downloadButton.addEventListener("click", handleDownload);
-    }
   });
-})();
+}
+
+/* =========================================================
+   Main Download Handler
+   ========================================================= */
+
+/**
+ * Handle the SaveSnap download action.
+ *
+ * @returns {void}
+ */
+function handleDownload() {
+  const input = getElement(SAVESNAP_CONFIG.inputId);
+  const resultArea = getElement(SAVESNAP_CONFIG.resultId);
+
+  if (!input) {
+    console.error("SaveSnap: #video-url was not found.");
+    return;
+  }
+
+  if (!resultArea) {
+    console.error("SaveSnap: #result-area was not found.");
+    return;
+  }
+
+  // Retrieve and clean the submitted URL.
+  const videoUrl = input.value.trim();
+
+  // Empty input validation.
+  if (!videoUrl) {
+    alert("Please paste a valid link first.");
+    input.focus();
+    return;
+  }
+
+  // URL validation.
+  if (!isValidVideoUrl(videoUrl)) {
+    alert("Please paste a valid video link first.");
+    input.focus();
+    return;
+  }
+
+  // Display the result interface.
+  showResult(videoUrl);
+}
+
+/* =========================================================
+   Event Binding
+   ========================================================= */
+
+/**
+ * Initialize SaveSnap.
+ */
+function initializeSaveSnap() {
+  const form = getElement(SAVESNAP_CONFIG.formId);
+  const input = getElement(SAVESNAP_CONFIG.inputId);
+
+  // Handle the form submission.
+  if (form) {
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      handleDownload();
+    });
+  }
+
+  // Allow Enter to trigger the downloader when the input exists.
+  if (input) {
+    input.addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        handleDownload();
+      }
+    });
+  }
+}
+
+/* =========================================================
+   Start Application
+   ========================================================= */
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initializeSaveSnap);
+} else {
+  initializeSaveSnap();
+}
+
+/* Expose the required function globally. */
+window.handleDownload = handleDownload;
+```
