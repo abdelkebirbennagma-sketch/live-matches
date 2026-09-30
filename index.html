@@ -3,49 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SaveSnap - Universal Video Downloader</title>
+    <title>SaveSnap - Online Video Downloader</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         body {
-            background-color: #0f172a;
+            background-color: #0b0f19;
             color: #f8fafc;
-            display: flex;
-            flex-direction: column;
             min-height: 100vh;
-        }
-        header {
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #1e293b;
-        }
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #38bdf8;
-            text-decoration: none;
-        }
-        main {
-            flex: 1;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            justify-content: space-between;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
             padding: 40px 20px;
             text-align: center;
         }
-        h1 {
+        header h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
-            color: #ffffff;
+            background: linear-gradient(to right, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
-        p.subtitle {
+        header p {
             color: #94a3b8;
             font-size: 1.1rem;
             margin-bottom: 40px;
@@ -54,91 +42,85 @@
             background: #1e293b;
             padding: 30px;
             border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-            width: 100%;
-            max-width: 600px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
             border: 1px solid #334155;
         }
         .input-group {
             display: flex;
             gap: 10px;
-        }
-        input[type="url"] {
-            flex: 1;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #475569;
             background: #0f172a;
-            color: #fff;
-            font-size: 16px;
+            padding: 8px;
+            border-radius: 12px;
+            border: 1px solid #475569;
+        }
+        .input-group input {
+            flex: 1;
+            background: transparent;
+            border: none;
             outline: none;
+            color: white;
+            padding: 12px 15px;
+            font-size: 1rem;
         }
-        input[type="url"]:focus {
-            border-color: #38bdf8;
-        }
-        button {
-            background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+        .input-group button {
+            background: #2563eb;
             color: white;
             border: none;
-            padding: 0 25px;
-            border-radius: 8px;
+            padding: 12px 25px;
             font-weight: bold;
-            font-size: 16px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: opacity 0.2s;
+            transition: background 0.3s;
         }
-        button:hover {
-            opacity: 0.9;
+        .input-group button:hover {
+            background: #1d4ed8;
         }
         .platforms {
-            margin-top: 25px;
+            margin-top: 20px;
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 20px;
             color: #64748b;
-            font-size: 14px;
+            font-size: 1.2rem;
+        }
+        #result-area {
+            margin-top: 25px;
+            display: none;
+            text-align: left;
         }
         footer {
             text-align: center;
             padding: 20px;
             color: #64748b;
+            font-size: 0.9rem;
             border-top: 1px solid #1e293b;
-            font-size: 14px;
-        }
-        #result-area {
-            margin-top: 20px;
-            display: none;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <a href="#" class="logo">SaveSnap 🚀</a>
-    </header>
+    <div class="container">
+        <header>
+            <h1>SaveSnap 🚀</h1>
+            <p>Download videos from TikTok, Instagram, YouTube, and Facebook instantly for free.</p>
+        </header>
 
-    <main>
-        <h1>Download Videos Online</h1>
-        <p class="subtitle">Download videos from TikTok, Instagram, YouTube, and Facebook instantly for free.</p>
-        
         <div class="downloader-box">
             <div class="input-group">
-                <input type="url" id="video-url" placeholder="Paste video link here..." required>
+                <input type="text" id="video-url" placeholder="Paste video link here...">
                 <button onclick="handleDownload()">Download</button>
-            </div>
-            
-            <div id="result-area">
-                <!-- سيتم عرض أزرار التحميل هنا لاحقاً -->
             </div>
 
             <div class="platforms">
-                <span>⚡ TikTok</span>
-                <span>⚡ Instagram</span>
-                <span>⚡ YouTube</span>
-                <span>⚡ Facebook</span>
+                <span><i class="fa-brands fa-tiktok"></i> TikTok</span>
+                <span><i class="fa-brands fa-instagram"></i> Instagram</span>
+                <span><i class="fa-brands fa-youtube"></i> YouTube</span>
+                <span><i class="fa-brands fa-facebook"></i> Facebook</span>
             </div>
+
+            <div id="result-area"></div>
         </div>
-    </main>
+    </div>
 
     <footer>
         <p>&copy; 2026 SaveSnap. All rights reserved.</p>
