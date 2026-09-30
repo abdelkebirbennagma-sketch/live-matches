@@ -1,22 +1,22 @@
 [
   {
     "id": 1,
-    "tournament": "دوري أبطال أوروبا",
+    "tournament": "دوري أبطال أوروبا - مباشر",
     "teamA": "ريال مدريد",
     "logoA": "https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg",
-    "teamB": "باريس سان جيرمان",
-    "logoB": "https://upload.wikimedia.org/wikipedia/en/a/a7/Paris_Saint-Germain_F.C..svg",
+    "teamB": "بايرن ميونخ",
+    "logoB": "https://upload.wikimedia.org/wikipedia/en/1/1b/FC_Bayern_Munich_logo_%282017%29.svg",
     "time": "مباشر الآن 🔴",
-    "streamUrl": "https://www.youtube.com/embed/live_stream?channel=UCUPVRUSz9Cq17j_oA35Qx3A"
+    "streamUrl": "https://www.yalla-shoot.us/embed/live.php?match=real-madrid-vs-bayern"
   },
   {
     "id": 2,
-    "tournament": "الدوري الإنجليزي الممتاز",
-    "teamA": "أرسنال",
-    "logoA": "https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg",
-    "teamB": "تشيلسي",
-    "logoB": "https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg",
+    "tournament": "الدوري الإنجليزي الممتاز - مباشر",
+    "teamA": "مانشستر سيتي",
+    "logoA": "https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg",
+    "teamB": "ليفربول",
+    "logoB": "https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg",
     "time": "مباشر الآن 🔴",
-    "streamUrl": "https://www.youtube.com/embed/jfKfPfyJRdk"
+    "streamUrl": "https://www.yalla-shoot.us/embed/live.php?match=man-city-vs-liverpool"
   }
 ]
