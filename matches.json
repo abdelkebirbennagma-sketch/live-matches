@@ -1,22 +1,22 @@
 [
   {
     "id": 1,
-    "tournament": "دوري أبطال أوروبا - مباشر",
+    "tournament": "دوري أبطال أوروبا - مباشر اليوم",
     "teamA": "ريال مدريد",
     "logoA": "https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg",
-    "teamB": "بايرن ميونخ",
-    "logoB": "https://upload.wikimedia.org/wikipedia/en/1/1b/FC_Bayern_Munich_logo_%282017%29.svg",
+    "teamB": "مانشستر سيتي",
+    "logoB": "https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg",
     "time": "مباشر الآن 🔴",
-    "streamUrl": "https://www.yalla-shoot.us/embed/live.php?match=real-madrid-vs-bayern"
+    "streamUrl": "https://www.koora-live.ovh/embed/match-1.html"
   },
   {
     "id": 2,
     "tournament": "الدوري الإنجليزي الممتاز - مباشر",
-    "teamA": "مانشستر سيتي",
-    "logoA": "https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg",
-    "teamB": "ليفربول",
-    "logoB": "https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg",
+    "teamA": "ليفربول",
+    "logoA": "https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg",
+    "teamB": "ارسنال",
+    "logoB": "https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg",
     "time": "مباشر الآن 🔴",
-    "streamUrl": "https://www.yalla-shoot.us/embed/live.php?match=man-city-vs-liverpool"
+    "streamUrl": "https://www.koora-live.ovh/embed/match-2.html"
   }
 ]
